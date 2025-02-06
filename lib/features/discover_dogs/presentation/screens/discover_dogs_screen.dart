@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tot_app/features/discover_dogs/presentation/bloc/discover_dogs_bloc.dart';
 
 class DiscoverDogsScreen extends StatefulWidget {
   const DiscoverDogsScreen({super.key, required this.title});
@@ -18,6 +20,12 @@ class _DiscoverDogsScreenState extends State<DiscoverDogsScreen> {
     setState(() {
       _counter++;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<DiscoverDogsBloc>(context).add(InitialEvent());
   }
 
   @override
