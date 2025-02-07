@@ -8,8 +8,7 @@ class DiscoverDogRepoImpl extends DiscoverDogRepo {
   DiscoverDogRepoImpl(this._dogRemoteServices);
 
   @override
-  Future<List<DogModel>> discoverDogs() async {
-    _dogRemoteServices.getDogsListing();
-    return [];
+  Future<List<DogModel>> discoverDogs({int limit = 10}) async {
+    return await _dogRemoteServices.getDogsListing(limit: limit);
   }
 }

@@ -10,9 +10,9 @@ class AppNavigator {
     return GoRouter(
       routes: [
         GoRoute(
-          path: '/${DiscoverDogsScreen.route}',
+          path: '/${HomeScreen.route}',
           pageBuilder: (context, state) {
-            final child = DiscoverDogsScreen(title: 'Flutter Demo Home Page');
+            final child = HomeScreen(title: 'Flutter Demo Home Page');
             if (Platform.isAndroid) {
               return MaterialPage(child: child);
             } else {
@@ -21,7 +21,7 @@ class AppNavigator {
           },
         ),
       ],
-      initialLocation: '/${DiscoverDogsScreen.route}',
+      initialLocation: '/${HomeScreen.route}',
       debugLogDiagnostics: true,
     );
   }

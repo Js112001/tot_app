@@ -1,58 +1,61 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tot_app/features/discover_dogs/presentation/bloc/discover_dogs_bloc.dart';
+import 'dart:io';
 
-class DiscoverDogsScreen extends StatefulWidget {
-  const DiscoverDogsScreen({super.key, required this.title});
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:tot_app/features/discover_dogs/presentation/screens/discover_dogs_listing.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key, required this.title});
 
   final String title;
 
-  static final String route = 'discover-dogs';
+  static final String route = 'home';
 
   @override
-  State<DiscoverDogsScreen> createState() => _DiscoverDogsScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _DiscoverDogsScreenState extends State<DiscoverDogsScreen> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<DiscoverDogsBloc>(context).add(InitialEvent());
-  }
+class _HomeScreenState extends State<HomeScreen> {
+  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        surfaceTintColor: Platform.isIOS ? Colors.transparent : null,
+        shadowColor: Platform.isIOS ? CupertinoColors.darkBackgroundGray : null,
+        scrolledUnderElevation: Platform.isIOS ? .1 : null,
+        toolbarHeight: Platform.isIOS ? 44 : null,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: <Widget>[DiscoverDogsListing()][currentPageIndex],
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        indicatorColor: Colors.amber,
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.notifications_sharp)),
+            label: 'Notifications',
+          ),
+          NavigationDestination(
+            icon: Badge(
+              label: Text('2'),
+              child: Icon(Icons.messenger_sharp),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+            label: 'Messages',
+          ),
+        ],
       ),
     );
   }

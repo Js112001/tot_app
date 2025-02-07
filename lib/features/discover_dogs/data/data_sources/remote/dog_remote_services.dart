@@ -4,7 +4,7 @@ import 'package:tot_app/utils/enums/enums.dart';
 import 'package:tot_app/utils/logger/app_logger.dart';
 
 sealed class DogRemoteServices {
-  Future<void> getDogsListing({int? limit = 10});
+  Future<List<DogModel>> getDogsListing({int limit = 10});
 }
 
 class DogRemoteServicesImpl extends DogRemoteServices {
@@ -13,16 +13,20 @@ class DogRemoteServicesImpl extends DogRemoteServices {
   DogRemoteServicesImpl(this._baseNetwork);
 
   @override
-  Future<void> getDogsListing({int? limit = 10}) async {
-    final result = await _baseNetwork.sendRequest(
+  Future<List<DogModel>> getDogsListing({int limit = 10}) async {
+    return await _baseNetwork.sendRequest(
       method: NetworkRequestMethod.get,
       endpoint: '',
       queryParameters: {
         'limit': '$limit',
       },
-      fromJson: (response) => dogModelFromJson,
+      fromJson: (response) {
+        AppLogger.i('[Limit]: $limit');
+        var result = response as List<dynamic>;
+        return result.map((item) {
+          return DogModel.fromJson(item);
+        }).toList();
+      },
     );
-
-    AppLogger.d('[Result]: $result');
   }
 }
