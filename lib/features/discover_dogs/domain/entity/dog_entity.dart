@@ -1,16 +1,32 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 
+part 'dog_entity.g.dart';
+
+@HiveType(typeId: 1)
 class DogEntity extends Equatable {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final String? name;
+  @HiveField(2)
   final String? breedGroup;
+  @HiveField(3)
   final String? size;
+  @HiveField(4)
   final String? lifespan;
+  @HiveField(5)
   final String? origin;
+  @HiveField(6)
   final String? temperament;
+  @HiveField(7)
   final List<String>? colors;
+  @HiveField(8)
   final String? description;
+  @HiveField(9)
   final String? image;
+  @HiveField(10)
+  final bool isBookmarked;
 
   const DogEntity({
     this.id,
@@ -23,6 +39,7 @@ class DogEntity extends Equatable {
     this.colors,
     this.description,
     this.image,
+    this.isBookmarked = false,
   });
 
   DogEntity copyWith({
@@ -36,6 +53,7 @@ class DogEntity extends Equatable {
     List<String>? colors,
     String? description,
     String? image,
+    bool isBookmarked = false,
   }) =>
       DogEntity(
         id: id ?? this.id,
@@ -48,26 +66,12 @@ class DogEntity extends Equatable {
         colors: colors ?? this.colors,
         description: description ?? this.description,
         image: image ?? this.image,
+        isBookmarked: isBookmarked,
       );
 
   @override
   List<Object?> get props => [id];
 
   @override
-  String toString() {
-    return '''
-      DogEntity(
-        id: $id,
-        name: $name,
-        breedGroup: $breedGroup,
-        size: $size,
-        lifespan: $lifespan,
-        origin: $origin,
-        temperament: $temperament,
-        colors: $colors,
-        description: $description,
-        image: $image,
-      )
-    ''';
-  }
+  bool? get stringify => true;
 }

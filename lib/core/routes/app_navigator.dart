@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tot_app/features/discover_dogs/presentation/screens/discover_dogs_screen.dart';
+import 'package:tot_app/features/home/presentation/screen/home_screen.dart';
 
 class AppNavigator {
   GoRouter setupRouter() {

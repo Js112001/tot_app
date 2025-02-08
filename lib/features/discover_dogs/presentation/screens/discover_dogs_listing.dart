@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tot_app/features/discover_dogs/presentation/bloc/discover_dogs_bloc.dart';
+import 'package:tot_app/features/discover_dogs/domain/entity/dog_entity.dart';
+import 'package:tot_app/features/discover_dogs/presentation/bloc/bookmarks/bookmarks_bloc.dart';
+import 'package:tot_app/features/discover_dogs/presentation/bloc/discover_dogs/discover_dogs_bloc.dart';
 import 'package:tot_app/features/discover_dogs/presentation/widgets/dog_info_card.dart';
 
 class DiscoverDogsListing extends StatefulWidget {
@@ -16,7 +18,7 @@ class _DiscoverDogsListingState extends State<DiscoverDogsListing> {
   late ScrollController _scrollController;
   Timer? _debounce;
   int limit = 10;
-  var dogs = [];
+  List<DogEntity> dogs = [];
 
   @override
   void initState() {
@@ -31,7 +33,11 @@ class _DiscoverDogsListingState extends State<DiscoverDogsListing> {
         if (state is GetDogsDataSuccessState) {
           _scrollController = ScrollController();
           _scrollController.addListener(_scrollListener);
-          dogs += state.dogs;
+          if (limit > 10) {
+            dogs += state.dogs;
+          } else {
+            dogs = state.dogs;
+          }
           return Column(
             children: [
               Expanded(
@@ -39,7 +45,68 @@ class _DiscoverDogsListingState extends State<DiscoverDogsListing> {
                   itemCount: state.totalDocs,
                   controller: _scrollController,
                   itemBuilder: (context, index) {
-                    return DogInfoCard(dogEntity: dogs[index]);
+                    return BlocBuilder<BookmarksBloc, BookmarksState>(
+                      builder: (context, bookmarkBlocState) {
+                        if (bookmarkBlocState is BookMarkedState &&
+                            bookmarkBlocState.isSuccess &&
+                            bookmarkBlocState.dog.id == dogs[index].id) {
+                          dogs = dogs.map((item) {
+                            if (item.id == dogs[index].id) {
+                              return item.copyWith(isBookmarked: true);
+                            } else {
+                              return item;
+                            }
+                          }).toList();
+                          return DogInfoCard(
+                            dogEntity: bookmarkBlocState.dog,
+                            onBookmarkClick: () {
+                              BlocProvider.of<BookmarksBloc>(context).add(
+                                RemoveDogInfoBookmarkEvent(
+                                  dogs[index],
+                                ),
+                              );
+                            },
+                          );
+                        } else if (bookmarkBlocState is RemoveBookmarkState &&
+                            bookmarkBlocState.dog.id == dogs[index].id) {
+                          dogs = dogs.map((item) {
+                            if (item.id == dogs[index].id) {
+                              return item.copyWith(isBookmarked: false);
+                            } else {
+                              return item;
+                            }
+                          }).toList();
+                          return DogInfoCard(
+                            dogEntity: bookmarkBlocState.dog,
+                            onBookmarkClick: () {
+                              BlocProvider.of<BookmarksBloc>(context).add(
+                                BookMarkDogInfoEvent(
+                                  dogs[index],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        return DogInfoCard(
+                          dogEntity: dogs[index],
+                          onBookmarkClick: () {
+                            if (dogs[index].isBookmarked) {
+                              BlocProvider.of<BookmarksBloc>(context).add(
+                                RemoveDogInfoBookmarkEvent(
+                                  dogs[index],
+                                ),
+                              );
+                            } else {
+                              BlocProvider.of<BookmarksBloc>(context).add(
+                                BookMarkDogInfoEvent(
+                                  dogs[index],
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      },
+                    );
                   },
                 ),
               ),

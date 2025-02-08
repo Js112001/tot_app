@@ -19,6 +19,7 @@ class DogModel extends DogEntity {
   final List<String>? colors;
   final String? description;
   final String? image;
+  final bool isBookmarked;
 
   const DogModel({
     this.id,
@@ -31,6 +32,7 @@ class DogModel extends DogEntity {
     this.colors,
     this.description,
     this.image,
+    this.isBookmarked = false,
   }) : super(
           id: id,
           name: name,
@@ -42,6 +44,7 @@ class DogModel extends DogEntity {
           colors: colors,
           description: description,
           image: image,
+          isBookmarked: isBookmarked,
         );
 
   @override
@@ -56,6 +59,7 @@ class DogModel extends DogEntity {
     List<String>? colors,
     String? description,
     String? image,
+    bool isBookmarked = false,
   }) =>
       DogModel(
         id: id ?? this.id,
@@ -68,6 +72,7 @@ class DogModel extends DogEntity {
         colors: colors ?? this.colors,
         description: description ?? this.description,
         image: image ?? this.image,
+        isBookmarked: isBookmarked,
       );
 
   factory DogModel.fromJson(Map<String, dynamic> json) => DogModel(

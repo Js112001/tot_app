@@ -6,12 +6,17 @@ class DogInfoCard extends StatelessWidget {
   const DogInfoCard({
     super.key,
     required this.dogEntity,
+    required this.onBookmarkClick,
   });
 
   final DogEntity dogEntity;
+  final VoidCallback onBookmarkClick;
 
   @override
   Widget build(BuildContext context) {
+    // if (dogEntity.isBookmarked) {
+    //   AppLogger.i('[Entity]: $dogEntity');
+    // }
     return Card(
       elevation: 10,
       child: Padding(
@@ -73,8 +78,10 @@ class DogInfoCard extends StatelessWidget {
             Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.bookmark_border),
+                onPressed: onBookmarkClick,
+                icon: dogEntity.isBookmarked
+                    ? Icon(Icons.bookmark)
+                    : Icon(Icons.bookmark_border),
               ),
             ),
           ],

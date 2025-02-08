@@ -1,4 +1,4 @@
-part of 'discover_dogs_bloc.dart';
+part of './discover_dogs_bloc.dart';
 
 sealed class DiscoverDogsState extends Equatable {}
 

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tot_app/core/di/injection_container.dart';
 import 'package:tot_app/core/routes/app_navigator.dart';
-import 'package:tot_app/features/discover_dogs/presentation/bloc/discover_dogs_bloc.dart';
+import 'package:tot_app/features/discover_dogs/presentation/bloc/bookmarks/bookmarks_bloc.dart';
+import 'package:tot_app/features/discover_dogs/presentation/bloc/discover_dogs/discover_dogs_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -21,6 +22,9 @@ class App extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider<DiscoverDogsBloc>(
+              create: (context) => sl(),
+            ),
+            BlocProvider<BookmarksBloc>(
               create: (context) => sl(),
             )
           ],
